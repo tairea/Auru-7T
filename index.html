@@ -1,1170 +1,1163 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-sunburst.min.js"></script>
-    <title>Auru 7T Sunburst Chart</title>
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
-      }
-      #container {
-        width: 100vw;
-        height: 100vh;
-      }
-      #logo {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-      }
-      #radio-buttons {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        color: rgba(255, 255, 255, 0.8);
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size: 0.8rem;
-      }
-      #calc-panel {
-        width: 300px;
-        position: fixed;
-        top: 30%;
-        right: 20px;
-        color: rgba(255, 255, 255, 0.8);
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size: 0.8rem;
-      }
-      #landowner-list {
-        padding: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Sunburst chart -->
-    <div id="container"></div>
 
-    <!-- Mode buttons -->
-    <div id="radio-buttons">
-      <input
-        type="radio"
-        onclick="radioClicked(this)"
-        id="drill"
-        name="mode"
-        class="radio"
-        value="drill"
-        checked="checked"
-      />
-      <label for="drill">Drill-down</label>
-      <br /><br />
-      <input
-        type="radio"
-        onclick="radioClicked(this)"
-        id="select"
-        name="mode"
-        class="radio"
-        value="select"
-      />
-      <label for="select">Calculate Selected %</label><br />
-      <label for="select" style="font-size: 0.6rem; margin-left: 25px;"
-        ><em>(Hold 'shift' key to select multiple)</em></label
-      ><br />
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-sunburst.min.js"></script>
+  <title>Auru 7T Sunburst Chart</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
 
-    <!-- Percentage Calculation -->
-    <div id="calc-panel">
-      <ul id="landowner-list"></ul>
-      <hr />
-      <p id="total">Total: <span id="total-value">0</span>%</p>
-    </div>
+    #container {
+      width: 100vw;
+      height: 100vh;
+    }
 
-    <!-- Sunrise Labs Logo -->
-    <img
-      id="logo"
-      alt="SunriseLabs Mauke"
-      src="./sunrise-labs-white.png"
-      width="100"
-    />
-  </body>
+    #logo {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
 
-  <script>
-    // create data
-    var data = [
-      {
-        name: "Auru 7T",
-        value: 1,
-        children: [
-          {
-            name: "Vaipunu",
-            value: 1 / 7,
-            children: [{ name: "Tarangariki", value: (1 / 7) * 1 }]
-          },
-          {
-            name: "Tairea",
-            value: 1 / 7,
-            children: [
-              {
-                name: "Tarangariki Tairea",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Tairea Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Vaine Nootai Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Tinokura Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Ngatangata Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Rourukeu Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Maara Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Metua Vaine Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Vaipunu Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Ngatungane Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Ngatokoa Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Teura Ben Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Kerekere Ke Auru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 96)
-                  },
-                  {
-                    name: "Vaine Terepai Taunga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 16)
-                  },
-                  {
-                    name: "Ngametua Taunga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 16)
-                  },
-                  {
-                    name: "Miimetua Tunganga Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Tangata Tunganga Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Tangataputa Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Rourukeu Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Ngatokotoru Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Teremoana Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Tangatatutai Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Turike Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Uruavake Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Tunganetapuni Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Aketoa Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Taunga Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Tereapii Tangata Pirioi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 104)
-                  },
-                  {
-                    name: "Pipirangi A Pipirangi Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 8)
-                  },
-                  {
-                    name: "Tuakana Mana Ariki Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 8)
-                  },
-                  {
-                    name: "Tairea @ Tangatakerekere Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 8)
-                  },
-                  {
-                    name: "Tariu Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 8)
-                  },
-                  {
-                    name: "Vaine Terepai Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 8)
-                  }
-                ]
-              },
-              {
-                name: "Auru Tairea",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Tairea Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Vaine Nootai Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Tinokura Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Ngametua Tapuni @ John Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Rourukeu Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Maara Metua Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Tangata Kerekere Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Vaipunu Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Metua Vaine Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Ngatungane Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Ngatokoa Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  },
-                  {
-                    name: "Teura Ben Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 12)
-                  }
-                ]
-              },
-              {
-                name: "Vaine Aerenga",
-                value: (1 / 7) * (1 / 18)
-              },
-              {
-                name: "Ngametua Aerenga",
-                value: (1 / 7) * (1 / 18)
-              },
-              {
-                name: "Pirioi Tairea",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Miimetua Vaine Tunganga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Taunga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Tereapii Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Aketoa Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Tangata Tunganga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Tanga Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Rourukeu Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Ngatokotoru Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Teremoana Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Patuariki Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Tangata Tutai Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Turike Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Ngatokotoru Uruavake Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  },
-                  {
-                    name: "Tungane Tapuni Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 14)
-                  }
-                ]
-              },
-              {
-                name: "Pipirangi Tairea",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Pipirangi A Pipirangi Tairea",
-                    value: (1 / 7) * (1 / 9) * 1
-                  }
-                ]
-              },
-              {
-                name: "Tangatakere Tairea",
-                value: (1 / 7) * (1 / 9)
-              },
-              {
-                name: "Manaariki Tairea",
-                value: (1 / 7) * (1 / 9)
-              },
-              {
-                name: "Tariu Tairea",
-                value: (1 / 7) * (1 / 9)
-              },
-              {
-                name: "Vaineterepai Tairea",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Aukino Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Noo Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Tereapii Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Tungane Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Peter Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Mangere Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Lydia Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Atiuma Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  },
-                  {
-                    name: "Tuaine Tairea",
-                    value: (1 / 7) * (1 / 9) * (1 / 9)
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            name: "Waipunuiti (Te Mata)",
-            value: 1 / 7,
-            children: [
-              {
-                name: "Tiatoa Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Te Maunga Vaipunuiti (aka Vavia Takai Vaipunu) ",
-                value: (1 / 7) * (1 / 10),
-                children: [
-                  {
-                    name: "Tekura O Tangaroa Vavia Takai",
-                    value: (1 / 7) * (1 / 10) * (1 / 5)
-                  },
-                  {
-                    name: "Upokoina Vavia Takai",
-                    value: (1 / 7) * (1 / 10) * (1 / 5)
-                  },
-                  {
-                    name: "Inakura Vavia Takai",
-                    value: (1 / 7) * (1 / 10) * (1 / 5)
-                  },
-                  {
-                    name: "Aketuru Vavia Takai",
-                    value: (1 / 7) * (1 / 10) * (1 / 5)
-                  },
-                  {
-                    name: "Temata Vavia Takai",
-                    value: (1 / 7) * (1 / 10) * (1 / 5)
-                  }
-                ]
-              },
-              {
-                name: "Tiare Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Niorau Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Vaine Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Autaua Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Tangata Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Te Ariivaineiti Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Tiare Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              },
-              {
-                name: "Ngatungane Vaipunuiti",
-                value: (1 / 7) * (1 / 10)
-              }
-            ]
-          },
+    #radio-buttons {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-size: 0.8rem;
+    }
 
-          {
-            name: "Rouru",
-            value: 1 / 7,
-            children: [
-              {
-                name: "Ka",
-                value: (1 / 7) * 1,
-                children: [
-                  {
-                    name: "Rangitukua Moekaa Alias Rangitukua",
-                    value: (1 / 7) * 1 * (1 / 4)
-                  },
-                  {
-                    name: "Tangatakerekere Moekaa Alias Rangitukua",
-                    value: (1 / 7) * 1 * (1 / 4),
-                    children: [
-                      {
-                        name: "Taputukura-o-te-rangi Vakatini",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
-                      },
-                      {
-                        name: "Maria June Taripo",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
-                      },
-                      {
-                        name: "Tupuna Ngaro Taripo",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
-                      },
-                      {
-                        name: "Teanau William Taripo",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
-                      },
-                      {
-                        name: "Ngavaine Miimetua Thomas Taripo",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Teiotu Moekaa Alias Rangitukua",
-                    value: (1 / 7) * 1 * (1 / 4),
-                    children: [
-                      {
-                        name: "Borneo Moekaa",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 2)
-                      },
-                      {
-                        name: "Ingatu Tarangariki Moekaa",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 2)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Uamaki Alias Tarangariki Moekaa Alias Rangitukua",
-                    value: (1 / 7) * 1 * (1 / 4),
-                    children: [
-                      {
-                        name: "Akerongo Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Ngatungane Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Vainetutai Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Ngatuaine Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Tupuna Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Tuainekore Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      },
-                      {
-                        name: "Teratuanuku Tarangariki",
-                        value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          { name: "Upoko", value: 1 / 7 },
-          {
-            name: "Marama",
-            value: 1 / 7,
-            children: [
-              {
-                name: "Paparonga Anaupo",
-                value: (1 / 7) * (1 / 12),
-                children: [
-                  {
-                    name: "Kuraau Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Joe Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10),
-                    children: [
-                      {
-                        name: "Tiamata Ngatupuna",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Joe",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Arepoki",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Melani Tangata",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Lucy",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Ruth Taungake",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Noel Teokotai",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Teresa Feura",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      },
-                      {
-                        name: "Utakea Ropati",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Kairai Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10),
-                    children: [
-                      {
-                        name: "Mii",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Akekaro",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Tokorima",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Kairae",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Metuaiti",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Tungane",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      },
-                      {
-                        name: "Bob",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Vainepoto Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Kaoti Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Terangioavarua Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Upokoina Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10),
-                    children: [
-                      {
-                        name: " Rouru",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6),
-                        children: [
-                          {
-                            name: "Rereao Rouru Papa",
-                            value:
-                              (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
-                          },
-                          {
-                            name: "Purotu Rouru Papa",
-                            value:
-                              (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
-                          },
-                          {
-                            name: "Rovan Rouru Papa",
-                            value:
-                              (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
-                          }
-                        ]
-                      },
-                      {
-                        name: " Tara",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
-                      },
-                      {
-                        name: " Teura",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
-                      },
-                      {
-                        name: " Patrick",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
-                      },
-                      {
-                        name: " Marcel",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
-                      },
-                      {
-                        name: " Kaoti",
-                        value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Tunganekore Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Autaua Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  },
-                  {
-                    name: "Teuruupoko Paparonga",
-                    value: (1 / 7) * (1 / 12) * (1 / 10)
-                  }
-                ]
-              },
-              {
-                name: "Tokoruakore Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Akepuina Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Nooroa Une",
-                value: (1 / 7) * (1 / 252)
-              },
-              {
-                name: "Akarare Une",
-                value: (1 / 7) * (1 / 252)
-              },
-              {
-                name: "Ngametua Une",
-                value: (1 / 7) * (1 / 252)
-              },
-              {
-                name: "Tiopa Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Vavia Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Tangata Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Ta Te Te Ina",
-                value: (1 / 7) * (1 / 84)
-              },
-              {
-                name: "Ina A Mou",
-                value: (1 / 7) * (1 / 24),
-                children: [
-                  {
-                    name: "Noopoti Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7),
-                    children: [
-                      {
-                        name: "Tangianau Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Tuvaine Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Mere Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Tiakai Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Tuainekore Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Akeena Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      },
-                      {
-                        name: "Ngametua Tangimetua Kapi",
-                        value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Metua Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  },
-                  {
-                    name: "Ruta Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  },
-                  {
-                    name: "Mana Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  },
-                  {
-                    name: "Tione Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  },
-                  {
-                    name: "Emi Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  },
-                  {
-                    name: "Vakare Tapuni",
-                    value: (1 / 7) * (1 / 24) * (1 / 7)
-                  }
-                ]
-              },
-              {
-                name: "Amosa A Mou",
-                value: (1 / 7) * (1 / 24),
-                children: [
-                  {
-                    name: "Kuraau Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Kairae Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Joe Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Vainepoto Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Kaoti Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9),
-                    children: [
-                      {
-                        name: "Te Kuraatiariki Tanekakerangi",
-                        value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
-                      },
-                      {
-                        name: "Vaviaati Tanekakerangi",
-                        value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
-                      },
-                      {
-                        name: "Vainetutai Tanekakerangi",
-                        value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
-                      },
-                      {
-                        name: "Paparonga Tanekakerangi",
-                        value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
-                      }
-                    ]
-                  },
-                  {
-                    name: "Terangi Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Tungane Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Pokoina Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  },
-                  {
-                    name: "Utakio Paparongo",
-                    value: (1 / 7) * (1 / 24) * (1 / 9)
-                  }
-                ]
-              },
-              {
-                name: "Ngavavia Anaupou",
-                value: (1 / 7) * (1 / 12)
-              },
-              {
-                name: "Reva Varaire",
-                value: (1 / 7) * (1 / 3),
-                children: [
-                  {
-                    name: "Rangitukua Moekaa",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Taputukura O Te Rangi Tupe Takau Manarangi Vakatini",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Maria June Teanau Taripo",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Tupuna Ngaro Teanau Taripo",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Teanau William Teanau Taripo",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Ngavaine Miimetua Thomas Teanau Taripo",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Teiotu Moekaa",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Tarangariki Moekaa",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Dave Niovara",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Upokotea Niovara",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Teokotai Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Daniela Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Kautai Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Ngateina Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Ngamaanga Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Faretai Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Rimaru Daniela Vai",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Mata Vai @ Snowball",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Wilson Vai @ Snowball",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  },
-                  {
-                    name: "Vainetutai Vai @ Snowball",
-                    value: (1 / 7) * (1 / 3) * (1 / 20)
-                  }
-                ]
-              },
-              {
-                name: "Dave Niovara",
-                value: (1 / 7) * (1 / 9)
-              },
-              {
-                name: "Pokotea Niovara",
-                value: (1 / 7) * (1 / 9)
-              },
-              {
-                name: "Vai Niovara",
-                value: (1 / 7) * (1 / 9),
-                children: [
-                  {
-                    name: "Teokotai Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Taniera Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Rimaru Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Kautai Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Ngateina Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Ngamaanga Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Paretai Taniera",
-                    value: (1 / 7) * (1 / 9) * (1 / 35)
-                  },
-                  {
-                    name: "Rima Vai Niovara",
-                    value: (1 / 7) * (1 / 9) * (1 / 5)
-                  },
-                  {
-                    name: "Mata Vai Niovara",
-                    value: (1 / 7) * (1 / 9) * (1 / 5)
-                  },
-                  {
-                    name: "Tereapii Viti Vai Niovara",
-                    value: (1 / 7) * (1 / 9) * (1 / 5)
-                  },
-                  {
-                    name: "Vaine Vai Niovara",
-                    value: (1 / 7) * (1 / 9) * (1 / 5)
-                  }
-                ]
-              }
-            ]
-          },
-          { name: "Kawia", value: 1 / 7 }
-        ]
-      }
-    ];
+    #calc-panel {
+      width: 300px;
+      position: fixed;
+      top: 30%;
+      right: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-size: 0.8rem;
+    }
 
-    // create a chart and set the data
-    var chart = anychart.sunburst(data, "as-tree");
+    #landowner-list {
+      padding: 10px;
+    }
 
-    // set the calculation mode
-    chart.calculationMode("parent-dependent");
+    #total {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
 
-    // set the container id
-    chart.container("container");
+<body>
+  <!-- Sunburst chart -->
+  <div id="container"></div>
 
-    // enable HTML for labels
-    chart.labels().useHtml(true);
+  <!-- Mode buttons -->
+  <div id="radio-buttons">
+    <input type="radio" onclick="radioClicked(this)" id="drill" name="mode" class="radio" value="drill"
+      checked="checked" />
+    <label for="drill">Drill-down</label>
+    <br /><br />
+    <input type="radio" onclick="radioClicked(this)" id="select" name="mode" class="radio" value="select" />
+    <label for="select">Calculate Selected %</label><br />
+    <label for="select" style="font-size: 0.6rem; margin-left: 25px;"><em>(Hold 'shift' key to select
+        multiple)</em></label><br />
+  </div>
 
-    // configure labels
-    chart.labels().format(function () {
-      var percent = (this.value * 100).toFixed(2);
-      return (
-        this.name + "<br/><p style='font-size:0.6rem'>" + percent + "%</p>"
+  <!-- Percentage Calculation -->
+  <div id="calc-panel">
+    <ul id="landowner-list"></ul>
+    <hr />
+    <p id="total">Total: <span id="total-value">0</span>%</p>
+  </div>
+
+  <!-- Sunrise Labs Logo -->
+  <img id="logo" alt="SunriseLabs Mauke" src="./sunrise-labs-white.png" width="100" />
+</body>
+
+<script>
+  // create data
+  var data = [
+    {
+      name: "Auru 7T",
+      value: 1,
+      children: [
+        {
+          name: "Vaipunu",
+          value: 1 / 7,
+          children: [{ name: "Tarangariki", value: (1 / 7) * 1 }]
+        },
+        {
+          name: "Tairea",
+          value: 1 / 7,
+          children: [
+            {
+              name: "Tarangariki Tairea",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Tairea Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Vaine Nootai Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Tinokura Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Ngatangata Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Rourukeu Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Maara Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Metua Vaine Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Vaipunu Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Ngatungane Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Ngatokoa Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Teura Ben Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Kerekere Ke Auru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 96)
+                },
+                {
+                  name: "Vaine Terepai Taunga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 16)
+                },
+                {
+                  name: "Ngametua Taunga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 16)
+                },
+                {
+                  name: "Miimetua Tunganga Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Tangata Tunganga Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Tangataputa Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Rourukeu Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Ngatokotoru Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Teremoana Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Tangatatutai Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Turike Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Uruavake Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Tunganetapuni Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Aketoa Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Taunga Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Tereapii Tangata Pirioi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 104)
+                },
+                {
+                  name: "Pipirangi A Pipirangi Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 8)
+                },
+                {
+                  name: "Tuakana Mana Ariki Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 8)
+                },
+                {
+                  name: "Tairea @ Tangatakerekere Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 8)
+                },
+                {
+                  name: "Tariu Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 8)
+                },
+                {
+                  name: "Vaine Terepai Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 8)
+                }
+              ]
+            },
+            {
+              name: "Auru Tairea",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Tairea Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Vaine Nootai Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Tinokura Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Ngametua Tapuni @ John Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Rourukeu Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Maara Metua Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Tangata Kerekere Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Vaipunu Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Metua Vaine Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Ngatungane Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Ngatokoa Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                },
+                {
+                  name: "Teura Ben Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 12)
+                }
+              ]
+            },
+            {
+              name: "Vaine Aerenga",
+              value: (1 / 7) * (1 / 18)
+            },
+            {
+              name: "Ngametua Aerenga",
+              value: (1 / 7) * (1 / 18)
+            },
+            {
+              name: "Pirioi Tairea",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Miimetua Vaine Tunganga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Taunga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Tereapii Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Aketoa Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Tangata Tunganga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Tanga Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Rourukeu Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Ngatokotoru Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Teremoana Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Patuariki Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Tangata Tutai Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Turike Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Ngatokotoru Uruavake Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                },
+                {
+                  name: "Tungane Tapuni Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 14)
+                }
+              ]
+            },
+            {
+              name: "Pipirangi Tairea",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Pipirangi A Pipirangi Tairea",
+                  value: (1 / 7) * (1 / 9) * 1
+                }
+              ]
+            },
+            {
+              name: "Tangatakere Tairea",
+              value: (1 / 7) * (1 / 9)
+            },
+            {
+              name: "Manaariki Tairea",
+              value: (1 / 7) * (1 / 9)
+            },
+            {
+              name: "Tariu Tairea",
+              value: (1 / 7) * (1 / 9)
+            },
+            {
+              name: "Vaineterepai Tairea",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Aukino Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Noo Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Tereapii Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Tungane Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Peter Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Mangere Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Lydia Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Atiuma Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                },
+                {
+                  name: "Tuaine Tairea",
+                  value: (1 / 7) * (1 / 9) * (1 / 9)
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Waipunuiti (Temata)",
+          value: 1 / 7,
+          children: [
+            {
+              name: "Tiatoa Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Te Maunga Vaipunuiti (aka Vavia Takai Vaipunu) ",
+              value: (1 / 7) * (1 / 10),
+              children: [
+                {
+                  name: "Tekura O Tangaroa Vavia Takai",
+                  value: (1 / 7) * (1 / 10) * (1 / 5)
+                },
+                {
+                  name: "Upokoina Vavia Takai",
+                  value: (1 / 7) * (1 / 10) * (1 / 5)
+                },
+                {
+                  name: "Inakura Vavia Takai",
+                  value: (1 / 7) * (1 / 10) * (1 / 5)
+                },
+                {
+                  name: "Aketuru Vavia Takai",
+                  value: (1 / 7) * (1 / 10) * (1 / 5)
+                },
+                {
+                  name: "Temata Vavia Takai",
+                  value: (1 / 7) * (1 / 10) * (1 / 5)
+                }
+              ]
+            },
+            {
+              name: "Tiare Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Niorau Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Vaine Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Autaua Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Tangata Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Te Ariivaineiti Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Tiare Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            },
+            {
+              name: "Ngatungane Vaipunuiti",
+              value: (1 / 7) * (1 / 10)
+            }
+          ]
+        },
+
+        {
+          name: "Rouru",
+          value: 1 / 7,
+          children: [
+            {
+              name: "Ka",
+              value: (1 / 7) * 1,
+              children: [
+                {
+                  name: "Rangitukua Moekaa Alias Rangitukua",
+                  value: (1 / 7) * 1 * (1 / 4)
+                },
+                {
+                  name: "Tangatakerekere Moekaa Alias Rangitukua",
+                  value: (1 / 7) * 1 * (1 / 4),
+                  children: [
+                    {
+                      name: "Taputukura-o-te-rangi Vakatini",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
+                    },
+                    {
+                      name: "Maria June Taripo",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
+                    },
+                    {
+                      name: "Tupuna Ngaro Taripo",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
+                    },
+                    {
+                      name: "Teanau William Taripo",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
+                    },
+                    {
+                      name: "Ngavaine Miimetua Thomas Taripo",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 5)
+                    }
+                  ]
+                },
+                {
+                  name: "Teiotu Moekaa Alias Rangitukua",
+                  value: (1 / 7) * 1 * (1 / 4),
+                  children: [
+                    {
+                      name: "Borneo Moekaa",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 2)
+                    },
+                    {
+                      name: "Ingatu Tarangariki Moekaa",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 2)
+                    }
+                  ]
+                },
+                {
+                  name: "Uamaki Alias Tarangariki Moekaa Alias Rangitukua",
+                  value: (1 / 7) * 1 * (1 / 4),
+                  children: [
+                    {
+                      name: "Akerongo Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Ngatungane Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Vainetutai Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Ngatuaine Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Tupuna Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Tuainekore Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    },
+                    {
+                      name: "Teratuanuku Tarangariki",
+                      value: (1 / 7) * 1 * (1 / 4) * (1 / 7)
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { name: "Upoko", value: 1 / 7 },
+        {
+          name: "Marama",
+          value: 1 / 7,
+          children: [
+            {
+              name: "Paparonga Anaupo",
+              value: (1 / 7) * (1 / 12),
+              children: [
+                {
+                  name: "Kuraau Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Joe Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10),
+                  children: [
+                    {
+                      name: "Tiamata Ngatupuna",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Joe",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Arepoki",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Melani Tangata",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Lucy",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Ruth Taungake",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Noel Teokotai",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Teresa Feura",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    },
+                    {
+                      name: "Utakea Ropati",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 9)
+                    }
+                  ]
+                },
+                {
+                  name: "Kairai Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10),
+                  children: [
+                    {
+                      name: "Mii",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Akekaro",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Tokorima",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Kairae",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Metuaiti",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Tungane",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    },
+                    {
+                      name: "Bob",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 7)
+                    }
+                  ]
+                },
+                {
+                  name: "Vainepoto Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Kaoti Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Terangioavarua Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Upokoina Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10),
+                  children: [
+                    {
+                      name: " Rouru",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6),
+                      children: [
+                        {
+                          name: "Rereao Rouru Papa",
+                          value:
+                            (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
+                        },
+                        {
+                          name: "Purotu Rouru Papa",
+                          value:
+                            (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
+                        },
+                        {
+                          name: "Rovan Rouru Papa",
+                          value:
+                            (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6) * (1 / 3)
+                        }
+                      ]
+                    },
+                    {
+                      name: " Tara",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
+                    },
+                    {
+                      name: " Teura",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
+                    },
+                    {
+                      name: " Patrick",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
+                    },
+                    {
+                      name: " Marcel",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
+                    },
+                    {
+                      name: " Kaoti",
+                      value: (1 / 7) * (1 / 12) * (1 / 10) * (1 / 6)
+                    }
+                  ]
+                },
+                {
+                  name: "Tunganekore Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Autaua Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                },
+                {
+                  name: "Teuruupoko Paparonga",
+                  value: (1 / 7) * (1 / 12) * (1 / 10)
+                }
+              ]
+            },
+            {
+              name: "Tokoruakore Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Akepuina Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Nooroa Une",
+              value: (1 / 7) * (1 / 252)
+            },
+            {
+              name: "Akarare Une",
+              value: (1 / 7) * (1 / 252)
+            },
+            {
+              name: "Ngametua Une",
+              value: (1 / 7) * (1 / 252)
+            },
+            {
+              name: "Tiopa Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Vavia Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Tangata Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Ta Te Te Ina",
+              value: (1 / 7) * (1 / 84)
+            },
+            {
+              name: "Ina A Mou",
+              value: (1 / 7) * (1 / 24),
+              children: [
+                {
+                  name: "Noopoti Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7),
+                  children: [
+                    {
+                      name: "Tangianau Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Tuvaine Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Mere Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Tiakai Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Tuainekore Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Akeena Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    },
+                    {
+                      name: "Ngametua Tangimetua Kapi",
+                      value: (1 / 7) * (1 / 24) * (1 / 7) * (1 / 7)
+                    }
+                  ]
+                },
+                {
+                  name: "Metua Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                },
+                {
+                  name: "Ruta Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                },
+                {
+                  name: "Mana Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                },
+                {
+                  name: "Tione Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                },
+                {
+                  name: "Emi Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                },
+                {
+                  name: "Vakare Tapuni",
+                  value: (1 / 7) * (1 / 24) * (1 / 7)
+                }
+              ]
+            },
+            {
+              name: "Amosa A Mou",
+              value: (1 / 7) * (1 / 24),
+              children: [
+                {
+                  name: "Kuraau Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Kairae Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Joe Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Vainepoto Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Kaoti Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9),
+                  children: [
+                    {
+                      name: "Te Kuraatiariki Tanekakerangi",
+                      value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
+                    },
+                    {
+                      name: "Vaviaati Tanekakerangi",
+                      value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
+                    },
+                    {
+                      name: "Vainetutai Tanekakerangi",
+                      value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
+                    },
+                    {
+                      name: "Paparonga Tanekakerangi",
+                      value: (1 / 7) * (1 / 24) * (1 / 9) * (1 / 4)
+                    }
+                  ]
+                },
+                {
+                  name: "Terangi Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Tungane Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Pokoina Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                },
+                {
+                  name: "Utakio Paparongo",
+                  value: (1 / 7) * (1 / 24) * (1 / 9)
+                }
+              ]
+            },
+            {
+              name: "Ngavavia Anaupou",
+              value: (1 / 7) * (1 / 12)
+            },
+            {
+              name: "Reva Varaire",
+              value: (1 / 7) * (1 / 3),
+              children: [
+                {
+                  name: "Rangitukua Moekaa",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Taputukura O Te Rangi Tupe Takau Manarangi Vakatini",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Maria June Teanau Taripo",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Tupuna Ngaro Teanau Taripo",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Teanau William Teanau Taripo",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Ngavaine Miimetua Thomas Teanau Taripo",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Teiotu Moekaa",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Tarangariki Moekaa",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Dave Niovara",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Upokotea Niovara",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Teokotai Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Daniela Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Kautai Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Ngateina Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Ngamaanga Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Faretai Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Rimaru Daniela Vai",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Mata Vai @ Snowball",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Wilson Vai @ Snowball",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                },
+                {
+                  name: "Vainetutai Vai @ Snowball",
+                  value: (1 / 7) * (1 / 3) * (1 / 20)
+                }
+              ]
+            },
+            {
+              name: "Dave Niovara",
+              value: (1 / 7) * (1 / 9)
+            },
+            {
+              name: "Pokotea Niovara",
+              value: (1 / 7) * (1 / 9)
+            },
+            {
+              name: "Vai Niovara",
+              value: (1 / 7) * (1 / 9),
+              children: [
+                {
+                  name: "Teokotai Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Taniera Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Rimaru Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Kautai Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Ngateina Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Ngamaanga Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Paretai Taniera",
+                  value: (1 / 7) * (1 / 9) * (1 / 35)
+                },
+                {
+                  name: "Rima Vai Niovara",
+                  value: (1 / 7) * (1 / 9) * (1 / 5)
+                },
+                {
+                  name: "Mata Vai Niovara",
+                  value: (1 / 7) * (1 / 9) * (1 / 5)
+                },
+                {
+                  name: "Tereapii Viti Vai Niovara",
+                  value: (1 / 7) * (1 / 9) * (1 / 5)
+                },
+                {
+                  name: "Vaine Vai Niovara",
+                  value: (1 / 7) * (1 / 9) * (1 / 5)
+                }
+              ]
+            }
+          ]
+        },
+        { name: "Kawia", value: 1 / 7 }
+      ]
+    }
+  ];
+
+  // create a chart and set the data
+  var chart = anychart.sunburst(data, "as-tree");
+
+  // set the calculation mode
+  chart.calculationMode("parent-dependent");
+
+  // set the container id
+  chart.container("container");
+
+  // enable HTML for labels
+  chart.labels().useHtml(true);
+
+  // configure labels
+  chart.labels().format(function () {
+    var percent = (this.value * 100).toFixed(2);
+    return (
+      this.name + "<br/><p style='font-size:0.6rem'>" + percent + "%</p>"
+    );
+  });
+
+  // configure labels of leaves
+  // chart
+  //   .leaves()
+  //   .labels()
+  //   .format(function () {
+  //     var percent = (this.value * 100).toFixed(2);
+  //     return percent + "%";
+  //   });
+
+  // configure tooltips
+  chart.tooltip().format(function () {
+    var percent = (this.value * 100).toFixed(2);
+    return this.name + "\nPercentage: " + percent + "%";
+  });
+
+  // set the selection mode
+  // chart.interactivity().selectionMode("drill-down");
+  // chart.interactivity().selectionMode("multi-select");
+
+  // set background gradient
+  chart.background().fill({
+    keys: ["#868f96", "#596164"],
+    angle: 120
+  });
+
+  // click event
+  chart.listen("pointsSelect", function (e) {
+    // console.log(e.points);
+    // var selected = [];
+    var total = 0;
+    var selectedPoints = e.points;
+
+    // get dom ul
+    let listElement = document.getElementById("landowner-list");
+    // clear dom ul
+    listElement.innerHTML = "";
+
+    // add values to ul
+    for (var i = 0; i < selectedPoints.length; i++) {
+      // get values
+      let name = selectedPoints[i].node.ka.name;
+      let valueAsPercentage = (selectedPoints[i].node.ka.value * 100).toFixed(
+        2
       );
-    });
+      total += Number(valueAsPercentage);
 
-    // configure labels of leaves
-    // chart
-    //   .leaves()
-    //   .labels()
-    //   .format(function () {
-    //     var percent = (this.value * 100).toFixed(2);
-    //     return percent + "%";
-    //   });
-
-    // configure tooltips
-    chart.tooltip().format(function () {
-      var percent = (this.value * 100).toFixed(2);
-      return this.name + "\nPercentage: " + percent + "%";
-    });
-
-    // set the selection mode
-    // chart.interactivity().selectionMode("multi-select");
-    // chart.interactivity().selectionMode("multi-select");
-
-    // set background
-    chart.background().fill({
-      keys: ["#868f96", "#596164"],
-      angle: 120
-    });
-
-    // click event
-    chart.listen("pointsSelect", function (e) {
-      // console.log(e.points);
-      // var selected = [];
-      var total = 0;
-      var selectedPoints = e.points;
-
-      // get dom ul
-      let listElement = document.getElementById("landowner-list");
-      // clear dom ul
-      listElement.innerHTML = "";
-
-      // add values to ul
-      for (var i = 0; i < selectedPoints.length; i++) {
-        // get values
-        let name = selectedPoints[i].node.ka.name;
-        let valueAsPercentage = (selectedPoints[i].node.ka.value * 100).toFixed(
-          2
-        );
-        total += Number(valueAsPercentage);
-
-        // append li
-        listElement.appendChild(
-          createMenuItem(valueAsPercentage + "% " + name)
-        );
-      }
-      document.getElementById("total-value").innerHTML = total;
-    });
-
-    function createMenuItem(name) {
-      let li = document.createElement("li");
-      li.textContent = name;
-      return li;
+      // append li
+      listElement.appendChild(
+        createMenuItem(valueAsPercentage + "% " + name)
+      );
     }
+    document.getElementById("total-value").innerHTML = total;
+  });
 
-    // initiate drawing the chart
-    chart.draw();
+  // create list item
+  function createMenuItem(name) {
+    let li = document.createElement("li");
+    li.textContent = name;
+    return li;
+  }
 
-    // hide calc-panel by default
-    document.getElementById("calc-panel").style.display = "none";
+  // initiate drawing the chart
+  chart.draw();
 
-    // radio button function
-    function radioClicked(thisRadioButton) {
-      if (thisRadioButton.value == "drill") {
-        console.log("drill seledted. enabling drill-mode");
-        document.getElementById("calc-panel").style.display = "none";
-        chart.interactivity().selectionMode("drill-down");
-        chart.draw();
-      } else if (thisRadioButton.value == "select") {
-        console.log("selected % seledted. enabling drill-mode");
-        document.getElementById("calc-panel").style.display = "block";
-        chart.interactivity().selectionMode("multi-select");
-        chart.draw();
-      }
+  // hide calc-panel by default
+  document.getElementById("calc-panel").style.display = "none";
+
+  // radio button function to change modes
+  function radioClicked(thisRadioButton) {
+    if (thisRadioButton.value == "drill") {
+      console.log("drill seledted. enabling drill-mode");
+      document.getElementById("calc-panel").style.display = "none";
+      chart.interactivity().selectionMode("drill-down");
+      chart.draw();
+    } else if (thisRadioButton.value == "select") {
+      console.log("selected % seledted. enabling drill-mode");
+      document.getElementById("calc-panel").style.display = "block";
+      chart.interactivity().selectionMode("multi-select");
+      chart.draw();
     }
-  </script>
+  }
+</script>
+
 </html>
